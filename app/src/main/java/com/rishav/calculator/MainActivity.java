@@ -7,6 +7,9 @@ import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.text.DecimalFormat;
 
 import java.util.ArrayList;
 
@@ -124,6 +127,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         vibe.vibrate(80);
         if (no.equals("AC")){
             input="";
+            result.setText("");
         }else if(no.equals("<-")){
             if(!input.equals("")) {
                 Character last = input.charAt(input.length()-1);
@@ -138,12 +142,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             boolean isTwiceOperator =false;
             String prev ="";
             if(input.length()>1) {
-                prev = input.substring(input.length() - 2, input.length() - 1);
+                prev = input.substring(input.length() - 1);
             }
-            if((prev.equals("+") || prev.equals("X") || prev.equals("-") || prev.equals("%") )&& (no.equals(" + ") || no.equals(" - ") ||no.equals(" % ") ||no.equals(" X ") )) {
+            if((prev.equals(" ") || prev.equals("."))&& (no.equals(" + ") || no.equals(" - ") ||no.equals(" % ") ||no.equals(" X ") ||no.equals(".") )) {
                 isTwiceOperator = true;
             }
-            if(input.equals("") && (no.equals(" + ") || no.equals(" - ") ||no.equals(" % ") ||no.equals(" X ") )){
+            if(input.equals("") && (no.equals(" + ") || no.equals(" - ") ||no.equals(" % ") ||no.equals(" X ") ||no.equals(".") )){
                 isTwiceOperator=true;
             }
             if (!isTwiceOperator) {
@@ -177,14 +181,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         getAns("-");
 
         finalResult=Double.parseDouble(operands.get(0));
-        result.setText(String.valueOf(finalResult));
+        DecimalFormat formatter = new DecimalFormat("#.##########");
+        result.setText(String.valueOf(formatter.format(finalResult)));
 
     }
 
     private void getAns(String operator) {
         int len = operands.size();
-        for(int j=0;j<len*len;j++){
-        for(int i=0;i<len;i++) {
+        for(int j=0;j<len;j++){
+            int size = operands.size();
+        for(int i=0;i<size;i++) {
             if (operands.get(i).equals(operator)) {
                 if (operands.get(i).equals("%")) {
                     //perform division
@@ -203,7 +209,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 operands.add(i-1,String.valueOf(finalResult));
                 operands.remove(i + 1);
                 operands.remove(i);
-                len = len - 2;
+                break;
             }
         }
         }
